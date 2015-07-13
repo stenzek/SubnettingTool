@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!--<link rel="shortcut icon" href="../../assets/ico/favicon.ico">-->
+        <title>Subnetting Tool</title>
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.css" rel="stylesheet">
+        <script src="js/jquery-1.9.1.js"></script>
+        <script src="js/bootstrap.js"></script>        
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+            body {
+                margin-bottom: 16px;
+            }
+            /*#footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 12px;
+                background-color: #f5f5f5;
+                font-size: 10px;
+                line-height: 16px;
+                text-align: center;
+            }*/
+            .resultTable .binary {
+            }
+            .resultTable .binary span {
+                padding: 4px;
+            }
+            .resultTable .binary .netPart {
+                background-color: #ffd0b8;
+            }
+            .resultTable .binary .subnetPart {
+                background-color: #6ab6ff;
+            }
+            .resultTable .binary .hostPart {
+                background-color: #caffc6;
+            }
+            .resultTable .decimal {
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" style="">
+            <div class="page-header">
+                <h1>Subnetting Tool</h1>
+            </div>
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#fixed" data-toggle="tab">IPv4 Fixed Length Visualizer</a></li>
+                <li><a href="#vlsm" data-toggle="tab">IPv4 Variable Length Visualizer</a></li>
+                <li><a href="#tables" data-toggle="tab">IPv4 Subnet Tables</a></li>
+                <li><a href="#bintodec" data-toggle="tab">Binary/Decimal Converter</a></li>
+            </ul>
+            
+            <div class="tab-content">
+                <div class="tab-pane active" id="fixed">
+                    <div class="well" style="margin-top: 10px;">
+                        This tool will provide a tabular listing of each network within the specified boundaries.<br />
+                        Provide your network address and choose a prefix length, then optionally choose subnet and host bits.<br />
+                        The results table will be automatically updated as the fields are changed.
+                    </div>
+                
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="fixedNetworkAddress">Network Address</label>
+                            <input type="text" class="form-control" id="fixedNetworkAddress" placeholder="xxx.xxx.xxx.xxx" />
+                            <label for="fixedPrefixLength">Subnet Mask (defaults to classful)</label>
+                            <select class="form-control" id="fixedPrefixLength">
+                                <option value="8">/8 (255.0.0.0)</option>
+                                <option value="9">/9 (255.128.0.0)</option>
+                                <option value="10">/10 (255.192.0.0)</option>
+                                <option value="11">/11 (255.224.0.0)</option>
+                                <option value="12">/12 (255.240.0.0)</option>
+                                <option value="13">/13 (255.248.0.0)</option>
+                                <option value="14">/14 (255.252.0.0)</option>
+                                <option value="15">/15 (255.254.0.0)</option>
+                                <option value="16">/16 (255.255.0.0)</option>
+                                <option value="17">/17 (255.255.128.0)</option>
+                                <option value="18">/18 (255.255.192.0)</option>
+                                <option value="19">/19 (255.255.224.0)</option>
+                                <option value="20">/20 (255.255.240.0)</option>
+                                <option value="21">/21 (255.255.248.0)</option>
+                                <option value="22">/22 (255.255.252.0)</option>
+                                <option value="23">/23 (255.255.254.0)</option>
+                                <option value="24">/24 (255.255.255.0)</option>
+                                <option value="25">/25 (255.255.255.128)</option>
+                                <option value="26">/26 (255.255.255.192)</option>
+                                <option value="27">/27 (255.255.255.224)</option>
+                                <option value="28">/28 (255.255.255.240)</option>
+                                <option value="29">/29 (255.255.255.248)</option>
+                                <option value="30">/30 (255.255.255.252)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fixedSubnetBits">Subnet Bits</label>
+                            <select class="form-control" id="fixedSubnetBits">
+                                <option value="0">0 (1 subnet)</option>
+                                <option value="1">1 (2 subnets)</option>
+                                <option value="2">2 (4 subnets)</option>
+                                <option value="3">3 (8 subnets)</option>
+                                <option value="4">4 (16 subnets)</option>
+                                <option value="5">5 (32 subnets)</option>
+                                <option value="6">6 (64 subnets)</option>
+                                <option value="7">7 (128 subnets)</option>
+                                <option value="8">8 (256 subnets)</option>
+                                <option value="9">9 (512 subnets)</option>
+                                <option value="10">10 (1024 subnets)</option>
+                                <option value="11">11 (2048 subnets)</option>
+                                <option value="12">12 (4096 subnets)</option>
+                                <option value="13">13 (8192 subnets)</option>
+                                <option value="14">13 (16384 subnets)</option>
+                                <option value="15">15 (32768 subnets)</option>
+                                <option value="16">16 (65536 subnets)</option>
+                                <option value="17">17 (131072 subnets)</option>
+                                <option value="18">18 (262144 subnets)</option>
+                                <option value="19">19 (524288 subnets)</option>
+                                <option value="20">20 (1048576 subnets)</option>
+                                <option value="21">21 (2097152 subnets)</option>
+                                <option value="22">22 (4194304 subnets)</option>
+                                <option value="23">23 (8388608 subnets)</option>
+                                <option value="24">24 (16777216 subnets)</option>
+                                <option value="25">25 (33554432 subnets)</option>
+                                <option value="26">26 (67108864 subnets)</option>
+                                <option value="27">27 (134217728 subnets)</option>
+                                <option value="28">28 (268435456 subnets)</option>
+                                <option value="29">29 (536870912 subnets)</option>
+                                <option value="30">30 (1073741824 subnets)</option>
+                            </select>
+                            <label for="fixedHostBits">Host Bits</label>
+                            <select class="form-control" id="fixedHostBits">
+                                <option value="2">2 (2 hosts)</option>
+                                <option value="3">3 (6 hosts)</option>
+                                <option value="4">4 (14 hosts)</option>
+                                <option value="5">5 (30 hosts)</option>
+                                <option value="6">6 (62 hosts)</option>
+                                <option value="7">7 (126 hosts)</option>
+                                <option value="8">8 (254 hosts)</option>
+                                <option value="9">9 (510 hosts)</option>
+                                <option value="10">10 (1022 hosts)</option>
+                                <option value="11">11 (2046 hosts)</option>
+                                <option value="12">12 (4094 hosts)</option>
+                                <option value="13">13 (8190 hosts)</option>
+                                <option value="14">13 (16382 hosts)</option>
+                                <option value="15">15 (32766 hosts)</option>
+                                <option value="16">16 (65534 hosts)</option>
+                                <option value="17">17 (131070 hosts)</option>
+                                <option value="18">18 (262142 hosts)</option>
+                                <option value="19">19 (524286 hosts)</option>
+                                <option value="20">20 (1048574 hosts)</option>
+                                <option value="21">21 (2097150 hosts)</option>
+                                <option value="22">22 (4194302 hosts)</option>
+                                <option value="23">23 (8388606 hosts)</option>
+                                <option value="24">24 (16777214 hosts)</option>
+                                <option value="25">25 (33554430 hosts)</option>
+                                <option value="26">26 (67108862 hosts)</option>
+                                <option value="27">27 (134217726 hosts)</option>
+                                <option value="28">28 (268435454 hosts)</option>
+                                <option value="29">29 (536870910 hosts)</option>
+                                <option value="30">30 (1073741822 hosts)</option>
+                            </select>
+                        </div>
+                    </form>
+                    <div id="fixedErrors" class="alert alert-danger">Error messages</div>
+                    <div id="fixedSuccess" class="alert alert-success">Success message</div>
+                    <div>
+                        <div id="fixedResults" class="panel panel-default resultTable">
+                            <div class="panel-heading">Resulting network list: </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Network Address (Binary)</th>
+                                        <th>Network Address</th>
+                                        <th>First Host Address</th>
+                                        <th>Last Host Address</th>
+                                        <th>Broadcast Address</th>
+                                        <th>Subnet Mask</th>
+                                        <th># Hosts</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div id="fixedLegend" class="panel panel-default">
+                            <div class="panel-heading">Binary Legend: </div>
+                            <div class="panel-body">
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 0; margin-right: 6px; background-color: #ffd0b8; "></div><div style="float: left; ">Original Network Part</div>
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 10px; margin-right: 6px; background-color: #6ab6ff; "></div><div style="float: left; ">Subnet Part</div>
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 10px; margin-right: 6px; background-color: #caffc6; "></div><div style="float: left; ">Host Part</div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="vlsm">
+                    <div class="well" style="margin-top: 10px;">
+                        This tool will provide a tabular listing of each network within the specified boundaries.<br>
+                        Provide your network address and choose a prefix length, and then enter the number of hosts for each network.<br>
+                        The host list does not have to be in any order, but seperate each list entry by a new line. Any invalid values will be ignored.<br>
+                        The results table will be automatically updated as the fields are changed.
+                    </div>
+
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="vlsmNetworkAddress">Network Address</label>
+                            <input type="text" class="form-control" id="vlsmNetworkAddress" placeholder="xxx.xxx.xxx.xxx" />
+                            <label for="vlsmPrefixLength">Subnet Mask (defaults to classful)</label>
+                            <select class="form-control" id="vlsmPrefixLength">
+                                <option value="8">/8 (255.0.0.0)</option>
+                                <option value="9">/9 (255.128.0.0)</option>
+                                <option value="10">/10 (255.192.0.0)</option>
+                                <option value="11">/11 (255.224.0.0)</option>
+                                <option value="12">/12 (255.240.0.0)</option>
+                                <option value="13">/13 (255.248.0.0)</option>
+                                <option value="14">/14 (255.252.0.0)</option>
+                                <option value="15">/15 (255.254.0.0)</option>
+                                <option value="16">/16 (255.255.0.0)</option>
+                                <option value="17">/17 (255.255.128.0)</option>
+                                <option value="18">/18 (255.255.192.0)</option>
+                                <option value="19">/19 (255.255.224.0)</option>
+                                <option value="20">/20 (255.255.240.0)</option>
+                                <option value="21">/21 (255.255.248.0)</option>
+                                <option value="22">/22 (255.255.252.0)</option>
+                                <option value="23">/23 (255.255.254.0)</option>
+                                <option value="24">/24 (255.255.255.0)</option>
+                                <option value="25">/25 (255.255.255.128)</option>
+                                <option value="26">/26 (255.255.255.192)</option>
+                                <option value="27">/27 (255.255.255.224)</option>
+                                <option value="28">/28 (255.255.255.240)</option>
+                                <option value="29">/29 (255.255.255.248)</option>
+                                <option value="30">/30 (255.255.255.252)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vlsmHostsList">
+                                Numbers of hosts for each network: <small><em>(Seperate each entry by a new line)</em></small>
+                            </label>
+                            <textarea class="form-control" id="vlsmHostsList" rows="4"></textarea>
+                        </div>
+                        <!--<div class="form-group"><button id="vlsmCalculateButton" type="button" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span> Calculate</button></div>-->
+                    </form>
+                    <div id="vlsmErrors" class="alert alert-danger">Error messages</div>
+                    <div id="vlsmSuccess" class="alert alert-success">Success message</div>
+                    <div>
+                        <div id="vlsmResults" class="panel panel-default resultTable">
+                            <div class="panel-heading">Resulting network list: </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Network Address (Binary)</th>
+                                        <th>Network Address</th>
+                                        <th>First Host Address</th>
+                                        <th>Last Host Address</th>
+                                        <th>Broadcast Address</th>
+                                        <th>Subnet Mask</th>
+                                        <th># Hosts</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div id="vlsmLegend" class="panel panel-default">
+                            <div class="panel-heading">Binary Legend: </div>
+                            <div class="panel-body">
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 0; margin-right: 6px; background-color: #ffd0b8; "></div><div style="float: left; ">Original Network Part</div>
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 10px; margin-right: 6px; background-color: #6ab6ff; "></div><div style="float: left; ">Subnet Part</div>
+                                <div style="float: left; width: 20px; height: 20px; margin-left: 10px; margin-right: 6px; background-color: #caffc6; "></div><div style="float: left; ">Host Part</div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tables">
+                    <div style="margin-top: 10px; "></div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Prefix length to subnet mask table</div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Prefix Length / CIDR</th>
+                                        <th>Subnet Mask</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>8</td><td>255.0.0.0</td></tr>
+                                    <tr><td>9</td><td>255.128.0.0</td></tr>
+                                    <tr><td>10</td><td>255.192.0.0</td></tr>
+                                    <tr><td>11</td><td>255.224.0.0</td></tr>
+                                    <tr><td>12</td><td>255.240.0.0</td></tr>
+                                    <tr><td>13</td><td>255.248.0.0</td></tr>
+                                    <tr><td>14</td><td>255.252.0.0</td></tr>
+                                    <tr><td>15</td><td>255.254.0.0</td></tr>
+                                    <tr><td>16</td><td>255.255.0.0</td></tr>
+                                    <tr><td>17</td><td>255.255.128.0</td></tr>
+                                    <tr><td>18</td><td>255.255.192.0</td></tr>
+                                    <tr><td>19</td><td>255.255.224.0</td></tr>
+                                    <tr><td>20</td><td>255.255.240.0</td></tr>
+                                    <tr><td>21</td><td>255.255.248.0</td></tr>
+                                    <tr><td>22</td><td>255.255.252.0</td></tr>
+                                    <tr><td>23</td><td>255.255.254.0</td></tr>
+                                    <tr><td>24</td><td>255.255.255.0</td></tr>
+                                    <tr><td>25</td><td>255.255.255.128</td></tr>
+                                    <tr><td>26</td><td>255.255.255.192</td></tr>
+                                    <tr><td>27</td><td>255.255.255.224</td></tr>
+                                    <tr><td>28</td><td>255.255.255.240</td></tr>
+                                    <tr><td>29</td><td>255.255.255.248</td></tr>
+                                    <tr><td>30</td><td>255.255.255.252</td></tr>
+                                    <tr><td>31</td><td>255.255.255.254</td></tr>
+                                    <tr><td>32</td><td>255.255.255.255</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">8-bit decimal to binary table</div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>Bit Position</th>
+                                        <td>8</td>
+                                        <td>7</td>
+                                        <td>6</td>
+                                        <td>5</td>
+                                        <td>4</td>
+                                        <td>3</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Decimal</th>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>8</td>
+                                        <td>4</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Bits required for numbers of subnets/hosts</div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th># Bits</th>
+                                        <th># Hosts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>2 (0 hosts)</td></tr>
+                                    <tr><td>2</td><td>4 (2 hosts)</td></tr>
+                                    <tr><td>3</td><td>8 (6 hosts)</td></tr>
+                                    <tr><td>4</td><td>16 (14 hosts)</td></tr>
+                                    <tr><td>5</td><td>32 (30 hosts)</td></tr>
+                                    <tr><td>6</td><td>64 (62 hosts)</td></tr>
+                                    <tr><td>7</td><td>128 (126 hosts)</td></tr>
+                                    <tr><td>8</td><td>256 (254 hosts)</td></tr>
+                                    <tr><td>9</td><td>512 (510 hosts)</td></tr>
+                                    <tr><td>10</td><td>1024 (1022 hosts)</td></tr>
+                                    <tr><td>11</td><td>2048 (2046 hosts)</td></tr>
+                                    <tr><td>12</td><td>4096 (4094 hosts)</td></tr>
+                                    <tr><td>13</td><td>8192 (8190 hosts)</td></tr>
+                                    <tr><td>14</td><td>16384 (16382 hosts)</td></tr>
+                                    <tr><td>15</td><td>32768 (32766 hosts)</td></tr>
+                                    <tr><td>16</td><td>65536 (65534 hosts)</td></tr>
+                                    <tr><td>17</td><td>131072 (131070 hosts)</td></tr>
+                                    <tr><td>18</td><td>262144 (262142 hosts)</td></tr>
+                                    <tr><td>19</td><td>524288 (524286 hosts)</td></tr>
+                                    <tr><td>20</td><td>1048576 (1048574 hosts)</td></tr>
+                                    <tr><td>21</td><td>2097152 (2097150 hosts)</td></tr>
+                                    <tr><td>22</td><td>4194304 (4194302 hosts)</td></tr>
+                                    <tr><td>23</td><td>8388608 (8388606 hosts)</td></tr>
+                                    <tr><td>24</td><td>16777216 (16777214 hosts)</td></tr>
+                                </tbody>
+                            </table>
+                            <small>These are in fact just powers of 2.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bintodec">
+                    <div style="margin-top: 10px; "></div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Decimal &lt;-&gt; binary converter</div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">IP &lt;-&gt; binary converter</div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container -->
+
+        <!--<div id="footer">
+            Work in progress
+        </div>-->
+        
+        <script>
+            function parseIPAddress(str) {
+                var components = str.split(".");
+                if (components.length !== 4) {
+                    return null;
+                }
+                var ip = 0;
+                for (var i = 0; i < 4; i++) {
+                    var octet = parseInt(components[i]);
+                    if (isNaN(octet) || octet < 0 || octet > 255) {
+                        return null;
+                    }
+                    ip |= octet << ((3 - i) * 8);
+                }
+                return ip;
+            }
+            
+            function IPAddressToString(ip) {
+                var str = (ip >>> 24).toString() + "." +
+                          ((ip >>> 16) & 255).toString() + "." +
+                          ((ip >>> 8) & 255).toString() + "." +
+                          (ip & 255).toString();
+
+                return str;
+            }
+
+            function IPAddressToBinaryPrettyHTML(netBits, subnetBits, ip) {
+                // lazily don't build this as dom nodes but html instead... ehh...
+                var netPartEnd = netBits;
+                var subnetPartEnd = netPartEnd + subnetBits;
+                var lastPart = -1;
+                var binaryHtml = "";
+                for (var j = 0; j < 32; j++) {
+                    if (j < netPartEnd) {
+                        if (lastPart != 0) {
+                            lastPart = 0;
+                            if (lastPart != -1) {
+                                binaryHtml += "</span>";
+                            }
+                            binaryHtml += "<span class=\"netPart\">";
+                        }
+                    } else if (j < subnetPartEnd) {
+                        if (lastPart != 1) {
+                            lastPart = 1;
+                            if (lastPart != -1) {
+                                binaryHtml += "</span>";
+                            }
+                            binaryHtml += "<span class=\"subnetPart\">";
+                        }
+                    } else {
+                        if (lastPart != 2) {
+                            lastPart = 2;
+                            if (lastPart != -1) {
+                                binaryHtml += "</span>";
+                            }
+                            binaryHtml += "<span class=\"hostPart\">";
+                        }
+                    }
+                    if (ip & (1 << (31 - j))) {
+                        binaryHtml += "1";
+                    } else {
+                        binaryHtml += "0";
+                    }
+                }
+                if (lastPart != -1) {
+                    binaryHtml += "</span>";
+                }
+
+                return binaryHtml;
+            }
+
+            function bitsToMask(length) {
+                return (1 << length) - 1;
+            }
+
+            function calculateRequiredBitsForHosts(hostCount) {
+                var currentBits = 1;
+                while (((1 << currentBits) - 2) < hostCount) {
+                    currentBits++;
+                }
+                return currentBits;
+            }
+
+            function validateFixedNetworkAddressAndPrefixLength(networkAddress, prefixLength) {
+                if (networkAddress === null) {
+                    return false;
+                }
+
+                var hostMask = bitsToMask(32 - prefixLength);
+                if ((networkAddress & hostMask) != 0) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            function getClassfulPrefixLength(networkAddress) {
+                // ehh lazy, pick class from address using the first octet
+                var firstOctet = (networkAddress >>> 24);
+                if (firstOctet < 128) {
+                    return 8;
+                } else if (firstOctet < 192) {
+                    return 16;
+                } else {
+                    return 24;
+                }
+            }
+
+            function formatResultTable(origPrefixLength, networks, tableBodyElement) {
+                tableBodyElement.empty();
+
+                // fill table
+                for (var i = 0; i < networks.length; i++) {
+                    //console.log(networks[i] + ": " + IPAddressToString(networks[i].networkAddress) + " / " + IPAddressToString(networks[i].subnetMask));
+                    var subnet = networks[i];
+                    var rowElement = $("<tr />");
+
+                    // #
+                    $("<td />", {
+                        class: "decimal",
+                        text: (i + 1)
+                    }).appendTo(rowElement);
+
+                    // binary
+                    $("<td />", {
+                        class: "binary",
+                        html: IPAddressToBinaryPrettyHTML(origPrefixLength, subnet.prefixLength - origPrefixLength, subnet.networkAddress)
+                    }).appendTo(rowElement);
+
+                    // decimal
+                    $("<td />", {
+                        class: "decimal",
+                        text: IPAddressToString(subnet.networkAddress) + "/" + subnet.prefixLength
+                    }).appendTo(rowElement);
+
+                    // first host address
+                    $("<td />", {
+                        class: "decimal",
+                        text: IPAddressToString(subnet.firstHostAddress)
+                    }).appendTo(rowElement);
+
+                    // last host address
+                    $("<td />", {
+                        class: "decimal",
+                        text: IPAddressToString(subnet.lastHostAddress)
+                    }).appendTo(rowElement);
+
+                    // broadcast address
+                    $("<td />", {
+                        class: "decimal",
+                        text: IPAddressToString(subnet.broadcastAddress)
+                    }).appendTo(rowElement);
+
+                    // subnet mask
+                    $("<td />", {
+                        class: "decimal",
+                        text: IPAddressToString(subnet.subnetMask)
+                    }).appendTo(rowElement);
+
+                    // number of hosts
+                    $("<td />", {
+                        class: "decimal",
+                        text: ((1 << (32 - subnet.prefixLength)) - 2).toString()
+                    }).appendTo(rowElement);
+
+                    // add to table
+                    rowElement.appendTo(tableBodyElement);
+                }
+            }
+
+            function onFixedNetworkChanged() {
+                var origNetworkAddress = parseIPAddress($("#fixedNetworkAddress").val());
+                if (origNetworkAddress === null) {
+                    $("#fixedErrors").html("No or invalid IP address entered.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return false;
+                }
+
+                // ehh lazy, pick class from address using the first octet
+                $("#fixedPrefixLength").val(getClassfulPrefixLength(origNetworkAddress));
+                onFixedPrefixLengthChanged();
+            }
+
+            function onFixedPrefixLengthChanged() {
+                var origPrefixLength = parseInt($("#fixedPrefixLength").val());
+                var availableBits = 32 - origPrefixLength;
+
+                var origNetworkAddress = parseIPAddress($("#fixedNetworkAddress").val());
+                if (origNetworkAddress === null) {
+                    $("#fixedErrors").html("No or invalid IP address entered.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return false;
+                }
+
+                // ensure network address host portion is all zeros
+                if (!validateFixedNetworkAddressAndPrefixLength(origNetworkAddress, origPrefixLength)) {
+                    $("#fixedErrors").html("The host portion of this network address and prefix length is not zero.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return;
+                }
+
+                // set subnet bits to 0, and host bits to prefix length
+                $("#fixedSubnetBits").val(0);
+                $("#fixedHostBits").val(availableBits);
+
+                updateFixedResults();
+            }
+
+            function onFixedSubnetBitsChanged() {
+                var origPrefixLength = parseInt($("#fixedPrefixLength").val());
+                var availableBits = 32 - origPrefixLength;
+                var subnetBits = parseInt($("#fixedSubnetBits").val());
+                var hostBits = availableBits - subnetBits;
+                if (hostBits < 0) {
+                    $("#fixedHostBits").val(0);
+                    $("#fixedErrors").html("Too many subnet bits selected (must be <= 32 - PrefixLength)");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return;
+                }
+
+                $("#fixedHostBits").val(hostBits);
+
+                updateFixedResults();
+            }
+            
+            function onFixedHostBitsChanged() {
+                var origPrefixLength = parseInt($("#fixedPrefixLength").val());
+                var availableBits = 32 - origPrefixLength;
+                var hostBits = parseInt($("#fixedHostBits").val());
+                var subnetBits = availableBits - hostBits;
+                if (subnetBits < 0) {
+                    $("#fixedSubnetBits").val(0);
+                    $("#fixedErrors").html("Too many host bits selected (must be <= 32 - PrefixLength)");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return;
+                }
+                    
+                $("#fixedSubnetBits").val(subnetBits);
+
+                updateFixedResults();
+            }
+
+            function updateFixedResults() {
+                // clear results table
+                $("#fixedErrors").html("");
+                $("#fixedSuccess").html("");
+
+                // parse form
+                var origNetworkAddress = parseIPAddress($("#fixedNetworkAddress").val());
+                var origPrefixLength = parseInt($("#fixedPrefixLength").val());
+                var subnetBits = parseInt($("#fixedSubnetBits").val());
+                var hostBits = parseInt($("#fixedHostBits").val());
+                if (origNetworkAddress === null) {
+                    $("#fixedErrors").html("No or invalid IP address entered.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return false;
+                }
+
+                // ensure network address host portion is all zeros
+                if (!validateFixedNetworkAddressAndPrefixLength(origNetworkAddress, origPrefixLength)) {
+                    $("#fixedErrors").html("The host portion of this network address and prefix length is not zero.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return;
+                }
+
+                // check bits
+                if ((origPrefixLength + subnetBits + hostBits) != 32) {
+                    $("#fixedErrors").html("Sum of prefix length + subnet bits + host bits must equal 32");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return false;
+                }
+
+                var networks = [];
+                var currentNetworkAddress = origNetworkAddress;
+                var numSubnets = (1 << subnetBits);
+                var networkIncrement = (1 << hostBits);
+                var subnetMask = 0xFFFFFFFF << (32 - (origPrefixLength + subnetBits));
+                //console.log("numSubnets = " + numSubnets);
+                //console.log("networkIncrement = " + networkIncrement);
+                //console.log("subnetMask = " + subnetMask);
+
+                // sanity check, otherwise watch the browser freeze...
+                if (numSubnets > 1024) {
+                    $("#fixedErrors").html("The provided settings would cause a large number of subnets to be generated (more than 1000!), which may freeze your browser, so we're playing it safe and not displaying the list.");
+                    $("#fixedErrors").show();
+                    $("#fixedSuccess").hide();
+                    $("#fixedResults").hide();
+                    return false;
+                }
+
+                // calculate networks
+                for (var i = 0; i < numSubnets; i++) {
+                    var subnet = {
+                        networkAddress: currentNetworkAddress,
+                        firstHostAddress: currentNetworkAddress + 1,
+                        lastHostAddress: currentNetworkAddress + (networkIncrement - 2),
+                        broadcastAddress: currentNetworkAddress + (networkIncrement - 1),
+                        subnetMask: subnetMask,
+                        prefixLength: origPrefixLength + subnetBits
+                    }
+                    networks.push(subnet);
+                    currentNetworkAddress += networkIncrement;
+                }
+
+                $("#fixedErrors").hide();
+                $("#fixedSuccess").html(networks.length + " networks calculated.");
+                $("#fixedSuccess").show();
+
+                var tableBodyElement = $("#fixedResults table tbody");
+                formatResultTable(origPrefixLength, networks, tableBodyElement);                
+
+                $("#fixedResults").show();
+                return true;
+            }
+
+            $(function () {
+                // bind form field change events to update function
+                $("#fixedNetworkAddress").change(onFixedNetworkChanged);
+                $("#fixedPrefixLength").change(onFixedPrefixLengthChanged);
+                $("#fixedSubnetBits").change(onFixedSubnetBitsChanged);
+                $("#fixedHostBits").change(onFixedHostBitsChanged);
+
+                // invoke ip address changed
+                onFixedNetworkChanged();
+            });
+
+            //////
+
+            function onVLSMNetworkChanged() {
+                $("#vlsmErrors").html("");
+                $("#vlsmSuccess").html("");
+
+                var origNetworkAddress = parseIPAddress($("#vlsmNetworkAddress").val());
+                if (origNetworkAddress === null) {
+                    $("#vlsmErrors").html("No or invalid IP address entered.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                // default to classful address
+                $("#vlsmPrefixLength").val(getClassfulPrefixLength(origNetworkAddress));
+
+                $("#vlsmErrors").hide();
+                $("#vlsmSuccess").hide();
+                $("#vlsmResults").hide();
+
+                //return true;
+                return updateVLSMResults();
+            }
+
+            function onVLSMPrefixLengthChanged() {
+                /*$("#vlsmErrors").html("");
+                $("#vlsmSuccess").html("");
+
+                // parse form
+                var origNetworkAddress = parseIPAddress($("#vlsmNetworkAddress").val());
+                var origPrefixLength = parseInt($("#vlsmPrefixLength").val());
+                if (origNetworkAddress === null) {
+                    $("#vlsmErrors").html("No or invalid IP address entered.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                // ensure network address host portion is all zeros
+                if (!validateFixedNetworkAddressAndPrefixLength(origNetworkAddress, origPrefixLength)) {
+                    $("#vlsmErrors").html("The host portion of this network address and prefix length is not zero.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                $("#vlsmErrors").hide();
+                $("#vlsmSuccess").hide();
+                $("#vlsmResults").hide();*/
+
+                //return true;
+                return updateVLSMResults();
+            }
+
+            function onVLSMHostListChanged() {
+                return updateVLSMResults();
+            }
+
+            function updateVLSMResults() {
+                $("#vlsmErrors").html("");
+                $("#vlsmSuccess").html("");
+
+                // parse form
+                var origNetworkAddress = parseIPAddress($("#vlsmNetworkAddress").val());
+                var origPrefixLength = parseInt($("#vlsmPrefixLength").val());
+                if (origNetworkAddress === null) {
+                    $("#vlsmErrors").html("No or invalid IP address entered.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                // ensure network address host portion is all zeros
+                if (!validateFixedNetworkAddressAndPrefixLength(origNetworkAddress, origPrefixLength)) {
+                    $("#vlsmErrors").html("The host portion of this network address and prefix length is not zero.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                // read networks
+                var hostCountList = [];
+                {
+                    var hostCountListElement = $("#vlsmHostsList").val();
+                    var hostCountListArray = hostCountListElement.split("\n");
+                    for (var i = 0; i < hostCountListArray.length; i++) {
+                        var hostCount;
+                        if (hostCountListArray[i].length == 0 || isNaN((hostCount = parseInt(hostCountListArray[i]))) || hostCount <= 0) {
+                            continue;
+                        }
+                        hostCountList.push(hostCount);
+                    }
+                }
+                if (hostCountList.length === 0) {
+                    $("#vlsmErrors").html("No or invalid host numbers entered.");
+                    $("#vlsmErrors").show();
+                    $("#vlsmSuccess").hide();
+                    $("#vlsmResults").hide();
+                    return false;
+                }
+
+                // sort the list in descending order
+                hostCountList.sort(function (l, r) { return (r - l); });
+
+                // work out start/end
+                var availableBits = 32 - origPrefixLength;
+                var startNetworkAddress = origNetworkAddress;
+                var endNetworkAddress = startNetworkAddress + ((1 << availableBits) - 1);
+                var currentNetworkAddress = startNetworkAddress;
+                var networks = [];
+
+                // for each host in the list...
+                for (var i = 0; i < hostCountList.length; i++) {
+                    // determine increment for this number of hosts
+                    var numHosts = hostCountList[i];
+                    var requiredBits = calculateRequiredBitsForHosts(numHosts);
+                    var networkIncrement = (1 << requiredBits);
+
+                    // check range
+                    if ((currentNetworkAddress + (networkIncrement - 1)) >= endNetworkAddress) {
+                        $("#vlsmErrors").html("The specified network/subnet mask is insufficent to fit the specified host list.");
+                        $("#vlsmErrors").show();
+                        $("#vlsmSuccess").hide();
+                        $("#vlsmResults").hide();
+                        return false;
+                    }
+
+                    // get prefix length for this network
+                    var subnetPrefixLength = 32 - requiredBits;
+                    var subnetMask = 0xFFFFFFFF << requiredBits;
+
+                    // store network
+                    var subnet = {
+                        networkAddress: currentNetworkAddress,
+                        firstHostAddress: currentNetworkAddress + 1,
+                        lastHostAddress: currentNetworkAddress + (networkIncrement - 2),
+                        broadcastAddress: currentNetworkAddress + (networkIncrement - 1),
+                        subnetMask: subnetMask,
+                        prefixLength: subnetPrefixLength
+                    }
+                    networks.push(subnet);
+                    //console.log(subnet);
+                    currentNetworkAddress += networkIncrement;
+                }
+
+                // display it
+                $("#vlsmErrors").hide();
+                $("#vlsmSuccess").html(networks.length + " networks calculated.");
+                $("#vlsmSuccess").show();
+
+                var tableBodyElement = $("#vlsmResults table tbody");
+                formatResultTable(origPrefixLength, networks, tableBodyElement);
+
+                $("#vlsmResults").show();
+                return true;
+            }
+
+            $(function () {
+                // bind form field change events to update function
+                $("#vlsmNetworkAddress").change(onVLSMNetworkChanged);
+                $("#vlsmPrefixLength").change(onVLSMPrefixLengthChanged);
+                $("#vlsmHostsList").change(onVLSMHostListChanged);
+                //$("#vlsmCalculateButton").click(updateVLSMResults);
+
+                // invoke ip address changed
+                onVLSMNetworkChanged();
+            });
+        </script>            
+        <script>
+            // support anchor on page tab activation
+            $(function () {
+                var hash = window.location.hash;
+                hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+                $('.nav-tabs a').click(function (e) {
+                    $(this).tab('show');
+                    var scrollmem = $('body').scrollTop();
+                    window.location.hash = this.hash;
+                    $('html,body').scrollTop(scrollmem);
+                });
+            });
+        </script>
+    </body>
+</html>
